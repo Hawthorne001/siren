@@ -21,11 +21,11 @@
     "@types/react-dom": "^18.0.0",
     "@uiw/react-textarea-code-editor": "^2.1.1",
     "autoprefixer": "^9",
-    "axios": "^0.27.2",
+    "axios": "^0.28.0",
     "bootstrap-icons": "^1.9.1",
     "chart.js": "^4.2.0",
     "concurrently": "5.2.0",
-    "crypto-js": "^4.1.1",
+    "crypto-js": "^4.2.0",
     "dotenv": "^16.0.3",
     "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
@@ -140,7 +140,7 @@
     "@typescript-eslint/parser": "^5.38.0",
     "babel-plugin-named-exports-order": "^0.0.2",
     "chromatic": "^6.8.1",
-    "electron": "^21.3.0",
+    "electron": "^22.3.25",
     "eslint": "8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^7.0.1",
@@ -159,6 +159,6 @@
     "react-test-renderer": "^18.2.0",
     "storybook-dark-mode": "^1.1.0",
     "storybook-tailwind-dark-mode": "^1.0.15",
-    "webpack": "^5.74.0"
+    "webpack": "^5.94.0"
   }
 }
