@@ -1,11 +1,11 @@
 import { selector } from 'recoil'
-import { selectBnSpec } from './selectBnSpec'
 import { Network } from '../../constants/enums'
+import { beaconNodeSpec } from '../atoms'
 
 export const selectBnChain = selector({
   key: 'selectBnChain',
   get: ({ get }) => {
-    const specs = get(selectBnSpec)
+    const specs = get(beaconNodeSpec)
     if (!specs) return
 
     const { DEPOSIT_CHAIN_ID } = specs
@@ -15,10 +15,12 @@ export const selectBnChain = selector({
         return Network.Goerli
       case '1':
         return Network.Mainnet
-      case '4242':
-        return Network.LocalTestnet
+      case '17000':
+        return Network.Holesky
+      case '11155111':
+        return Network.Sepolia
       default:
-        return
+        return Network.LocalTestnet
     }
   },
 })

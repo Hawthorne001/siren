@@ -1,18 +1,20 @@
+import { FC, SVGProps } from 'react'
 import { Protocol } from '../constants/enums'
+import { KeyStoreData } from '../hooks/useLodestarDepositData'
+import { BeaconNodeSpecResults, SyncData } from './beacon'
+import { Diagnostics } from './diagnostic'
+
+export interface NextFetchRequestInit extends RequestInit {
+  next?: {
+    revalidate?: number
+  }
+}
 
 export enum StatusColor {
   DARK = 'bg-dark100',
   SUCCESS = 'bg-success',
   WARNING = 'bg-warning',
   ERROR = 'bg-error',
-}
-
-export type ClientProvider = {
-  provider: string
-  title: string
-  cardNumber: string
-  subTitle: string
-  language: string
 }
 
 export type NodeVersion = {
@@ -26,21 +28,26 @@ export type Endpoint = {
   port: number
 }
 
-export type Alert = {
-  message: string
-  subText: string
-  severity: StatusColor
-}
-
-export type CurrencyPrefix = {
-  prefix: string
-  formattedPrefix?: string
-}
-
 export type SemanticVersion = {
   major: number
   minor: number
   patch: number
+}
+
+export type LogData = {
+  id: number
+  level: LogLevels
+  type: LogType
+  data: string
+  isHidden: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export type LogMetric = {
+  warningLogs: LogData[]
+  errorLogs: LogData[]
+  criticalLogs: LogData[]
 }
 
 export enum LogType {
@@ -62,18 +69,6 @@ export type SSELog = {
   service: string
   time: string
   [key: string]: any
-}
-
-export type LogCounts = {
-  totalLogsPerHour: number
-  criticalPerHour: number
-  warningsPerHour: number
-  errorsPerHour: number
-}
-
-export interface PollingOptions {
-  time?: number
-  isReady?: boolean
 }
 
 export interface DeviceList {
@@ -105,6 +100,7 @@ export interface AlertMessage {
 export enum ToastType {
   ERROR = 'error',
   SUCCESS = 'success',
+  WARNING = 'WARNING',
 }
 
 export type Rates = {
@@ -114,4 +110,106 @@ export type Rates = {
 export type EthExchangeRates = {
   rates: Rates
   currencies: string[]
+}
+
+export type ProposerDuty = {
+  pubkey: string
+  validator_index: string
+  slot: string
+  uuid: string
+}
+
+export type OptionalString = string | undefined
+export type OptionalBoolean = boolean | undefined
+
+export interface SetupProps {
+  beaconSpec: BeaconNodeSpecResults
+  initNodeHealth: Diagnostics
+  initSyncData: SyncData
+}
+
+export enum ChainId {
+  MAINNET = 'MAINNET',
+  HOLESKY = 'HOLESKY',
+  LOCALTESTNET = 'LOCALTESTNET',
+}
+
+export enum ValidatorManagementView {
+  MAIN = 'MAIN',
+  ADD = 'ADD',
+  CREATE = 'CREATE',
+  RECOVER = 'RECOVER',
+  IMPORT = 'IMPORT',
+}
+
+export type AddValidatorOption = {
+  title: string
+  subTitle: string
+  caption: string
+  isDisabled: boolean
+  isRecommended: boolean
+  SVG: FC<SVGProps<SVGSVGElement>>
+  view: ValidatorManagementView
+}
+
+export type ValidatorCandidate = {
+  id: string
+  index: number | undefined
+  pubKey?: string
+  name: string | undefined
+  withdrawalCredentials: string | undefined
+  keyStorePassword: string | undefined
+  isValidIndex?: boolean
+  isVerifiedCredentials?: boolean
+}
+
+export type ValidatorRewardEstimate = {
+  apr: number
+  totalAnnualRewards: number
+}
+
+export enum ActivityType {
+  DEPOSIT = 'DEPOSIT',
+  IMPORT = 'IMPORT',
+  GRAFFITI = 'GRAFFITI',
+  WITHDRAWAL = 'WITHDRAWAL',
+}
+
+export type ActivityResponse = {
+  count: number
+  rows: Activity[]
+}
+
+export type Activity = {
+  type: ActivityType
+  pubKey: string
+  id: number
+  data: string
+  hasSeen: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export type TxStatus = 'pending' | 'error' | 'success'
+export type TxHash = `0x${string}`
+
+export type DepositData = {
+  txHash: TxHash
+  keyStore: KeyStoreData
+  pubKey: string
+  mnemonicIndex: number
+  status: TxStatus
+}
+
+export enum TimeUnit {
+  YEAR = 'YEAR',
+  MONTH = 'MONTH',
+  WEEK = 'WEEK',
+  DAY = 'DAY',
+  HOUR = 'HOUR',
+}
+
+export enum NetworkId {
+  HOLESKY = '17000',
+  MAINNET = '1',
 }

@@ -1,9 +1,8 @@
 import { atom } from 'recoil'
-import { AppView, ContentView, OnboardView, SetupSteps, UiMode } from '../constants/enums'
-import { ActiveDevice, AlertMessage, DeviceList, EthExchangeRates, ValAliases } from '../types'
-import { BeaconSyncResult, HealthDiagnosticResult, ValidatorSyncResult } from '../types/diagnostic'
-import { BeaconValidatorResult, ValidatorCache } from '../types/validator'
-import { BeaconValidatorMetricResults } from '../types/beacon'
+import { AppView, OnboardView, UiMode } from '../constants/enums'
+import { ActiveDevice, AlertMessage, EthExchangeRates, ProposerDuty, ValAliases } from '../types'
+import { BeaconNodeSpecResults } from '../types/beacon'
+import { HealthDiagnosticResult } from '../types/diagnostic'
 
 export const uiMode = atom<UiMode>({
   key: 'UiMode',
@@ -15,53 +14,13 @@ export const appView = atom<AppView | undefined>({
   default: undefined,
 })
 
-export const dashView = atom<ContentView>({
-  key: 'DashView',
-  default: ContentView.MAIN,
-})
-
 export const onBoardView = atom<OnboardView>({
   key: 'OnboardView',
   default: OnboardView.CONFIGURE,
 })
 
-export const setupStep = atom<SetupSteps | undefined>({
-  key: 'SetupStep',
-  default: undefined,
-})
-
-export const validatorSyncInfo = atom<ValidatorSyncResult>({
-  key: 'validatorSyncInfo',
-  default: undefined,
-})
-
-export const beaconSyncInfo = atom<BeaconSyncResult>({
-  key: 'beaconSyncInfos',
-  default: undefined,
-})
-
-export const validatorStateInfo = atom<BeaconValidatorResult[] | undefined>({
-  key: 'validatorStateInfo',
-  default: undefined,
-})
-
 export const userName = atom<string>({
   key: 'userName',
-  default: undefined,
-})
-
-export const validatorVersionData = atom<string | undefined>({
-  key: 'validatorVersionData',
-  default: undefined,
-})
-
-export const beaconVersionData = atom<string | undefined>({
-  key: 'beaconVersionData',
-  default: undefined,
-})
-
-export const validatorHealthResult = atom<HealthDiagnosticResult | undefined>({
-  key: 'validatorHealthResult',
   default: undefined,
 })
 
@@ -70,33 +29,8 @@ export const beaconHealthResult = atom<HealthDiagnosticResult | undefined>({
   default: undefined,
 })
 
-export const validatorSearch = atom<string>({
-  key: 'validatorSearch',
-  default: '',
-})
-
-export const validatorIndex = atom<number | undefined>({
-  key: 'validatorIndex',
-  default: undefined,
-})
-
-export const validatorPeerCount = atom<number | undefined>({
-  key: 'validatorPeerCount',
-  default: undefined,
-})
-
 export const exchangeRates = atom<EthExchangeRates | undefined>({
   key: 'exchangeRates',
-  default: undefined,
-})
-
-export const activeCurrency = atom<string>({
-  key: 'activeCurrency',
-  default: undefined,
-})
-
-export const validatorCacheBalanceResult = atom<ValidatorCache | undefined>({
-  key: 'validatorCacheBalanceResult',
   default: undefined,
 })
 
@@ -113,11 +47,6 @@ export const validatorNetworkError = atom<boolean>({
 export const beaconNetworkError = atom<boolean>({
   key: 'beaconNetworkError',
   default: false,
-})
-
-export const validatorMetrics = atom<BeaconValidatorMetricResults[]>({
-  key: 'validatorMetrics',
-  default: undefined,
 })
 
 export const sessionAuthErrorCount = atom<number>({
@@ -140,11 +69,6 @@ export const validatorAliases = atom<ValAliases | undefined>({
   default: undefined,
 })
 
-export const deviceSettings = atom<DeviceList>({
-  key: 'deviceSettings',
-  default: undefined,
-})
-
 export const activeDevice = atom<ActiveDevice>({
   key: 'activeDevice',
   default: undefined,
@@ -153,4 +77,34 @@ export const activeDevice = atom<ActiveDevice>({
 export const alertLogs = atom<AlertMessage[]>({
   key: 'alertLogs',
   default: [],
+})
+
+export const proposerDuties = atom<ProposerDuty[]>({
+  key: 'proposerDuties',
+  default: [],
+})
+
+export const beaconNodeSpec = atom<BeaconNodeSpecResults>({
+  key: 'beaconNodeSpec',
+  default: undefined,
+})
+
+export const activeValidatorId = atom<number | undefined>({
+  key: 'activeValidatorId',
+  default: undefined,
+})
+
+export const isEditValidator = atom<boolean>({
+  key: 'isEditValidator',
+  default: undefined,
+})
+
+export const isValidatorDetail = atom<boolean>({
+  key: 'isValidatorDetail',
+  default: undefined,
+})
+
+export const isWalletConnectModal = atom<boolean>({
+  key: 'isWalletConnectModal',
+  default: false,
 })

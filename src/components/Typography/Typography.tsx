@@ -1,4 +1,5 @@
 import { FC, ReactNode, createElement } from 'react'
+import { OptionalString } from '../../types'
 
 const ELEMENT = {
   h1: 'h1',
@@ -18,7 +19,9 @@ type TagsSupported = (typeof tagsSupported)[number]
 export type TypographyFamily = 'font-openSauce' | 'font-roboto' | 'font-archivo'
 
 export type TypographyColor =
+  | 'text-darkFull'
   | 'text-dark900'
+  | 'text-dark700'
   | 'text-dark500'
   | 'text-dark300'
   | 'text-dark400'
@@ -36,6 +39,7 @@ export type TypographyColor =
 export type TypographyType =
   | 'text-caption2'
   | 'text-caption1'
+  | 'text-caption'
   | 'text-body'
   | 'text-subtitle3'
   | 'text-subtitle2'
@@ -45,14 +49,17 @@ export type TypographyType =
   | 'text-h1'
   | 'text-title'
   | 'text-tiny'
+  | 'text-xTiny'
+  | 'text-sm'
+  | 'text-caption1.5'
 
 export interface TypographyProps {
-  className?: string
-  color?: TypographyColor
-  darkMode?: string
+  className?: OptionalString
+  color?: TypographyColor | undefined
+  darkMode?: OptionalString
   children: ReactNode | ReactNode[]
   as?: TagsSupported
-  type?: TypographyType
+  type?: TypographyType | undefined
   isBold?: boolean
   isUpperCase?: boolean
   isCapitalize?: boolean

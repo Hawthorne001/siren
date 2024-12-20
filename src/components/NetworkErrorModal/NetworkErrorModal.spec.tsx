@@ -1,58 +1,88 @@
-import NetworkErrorModal from './NetworkErrorModal'
-import { fireEvent, render, screen } from '@testing-library/react'
-import useUiMode from '../../hooks/useUiMode'
-import { mockedSetRecoilState, mockedRecoilValue } from '../../../test.helpers'
+import { render, screen } from '@testing-library/react'
+import React from 'react'
 import { UiMode } from '../../constants/enums'
-import clearAllMocks = jest.clearAllMocks
+import useUiMode from '../../hooks/useUiMode'
+import NetworkErrorModal from './NetworkErrorModal'
 
 jest.mock('../../hooks/useMediaQuery', () => jest.fn(() => false))
 jest.mock('../../hooks/useUiMode', () => jest.fn())
 
-const mockedUseUiMode = useUiMode as jest.MockedFn<typeof useUiMode>
-const mockSetRecoilState = jest.fn()
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'networkErrorModal.title': 'Network Error',
+        'networkErrorModal.beaconAndValidator': 'Beacon Node and Validator Client',
+        'networkErrorModal.beaconNode': 'Beacon Node',
+        'networkErrorModal.validatorClient': 'Validator Client',
+      }
+      return translations[key] || key
+    },
+  }),
+  Trans: ({ i18nKey, values = {}, components = {}, children }: any) => {
+    const translations: Record<string, string> = {
+      'networkErrorModal.affectedNetworks':
+        'Siren failed to maintain connection to the designated <span>{{network}}</span>. ',
+      'networkErrorModal.reconfigureOrContact':
+        'Please review and update configuration settings. If this issue persists please contact our team in <0>discord</0>.',
+    }
+
+    if (i18nKey === 'networkErrorModal.affectedNetworks') {
+      const network = values.network
+      const SpanElement = components.span
+      return (
+        <>
+          Siren failed to maintain connection to the designated{' '}
+          {React.cloneElement(SpanElement, {}, network)}.
+        </>
+      )
+    }
+
+    if (i18nKey === 'networkErrorModal.reconfigureOrContact') {
+      const DiscordLink = React.Children.toArray(children)[0]
+      return (
+        <>
+          Please review and update configuration settings. If this issue persists please contact our
+          team in {DiscordLink}.
+        </>
+      )
+    }
+
+    return <>{translations[i18nKey] || i18nKey}</>
+  },
+}))
+
+const mockedUseUiMode = useUiMode as jest.MockedFunction<typeof useUiMode>
 
 describe('NetworkErrorModal component', () => {
   beforeEach(() => {
-    clearAllMocks()
+    jest.clearAllMocks()
   })
+
   it('should render validator and beacon error text', () => {
-    mockedUseUiMode.mockReturnValue({ mode: UiMode.DARK, toggleUiMode: jest.fn })
-    mockedRecoilValue.mockReturnValue(true)
-    render(<NetworkErrorModal />)
+    mockedUseUiMode.mockReturnValue({ mode: UiMode.DARK, toggleUiMode: jest.fn() })
+    render(<NetworkErrorModal isValidatorNetworkError isBeaconNetworkError />)
 
     expect(screen.getByTestId('networkText')).toHaveTextContent(
-      'networkErrorModal.affectedNetworksnetworkErrorModal.beaconAndValidator networkErrorModal.reconfigureOrContactdiscord.',
+      'Siren failed to maintain connection to the designated Beacon Node and Validator Client.Please review and update configuration settings. If this issue persists please contact our team in discord.',
     )
   })
+
   it('should render Beacon error', () => {
-    mockedUseUiMode.mockReturnValue({ mode: UiMode.DARK, toggleUiMode: jest.fn })
-    mockedRecoilValue.mockReturnValueOnce(true)
-    mockedRecoilValue.mockReturnValueOnce(false)
-    render(<NetworkErrorModal />)
+    mockedUseUiMode.mockReturnValue({ mode: UiMode.DARK, toggleUiMode: jest.fn() })
+    render(<NetworkErrorModal isBeaconNetworkError isValidatorNetworkError={false} />)
 
     expect(screen.getByTestId('networkText')).toHaveTextContent(
-      'networkErrorModal.affectedNetworksnetworkErrorModal.beaconNode networkErrorModal.reconfigureOrContactdiscord.',
+      'Siren failed to maintain connection to the designated Beacon Node.Please review and update configuration settings. If this issue persists please contact our team in discord.',
     )
   })
-  it('should render Beacon error', () => {
-    mockedUseUiMode.mockReturnValue({ mode: UiMode.DARK, toggleUiMode: jest.fn })
-    mockedRecoilValue.mockReturnValueOnce(false)
-    mockedRecoilValue.mockReturnValueOnce(true)
-    render(<NetworkErrorModal />)
+
+  it('should render Validator error', () => {
+    mockedUseUiMode.mockReturnValue({ mode: UiMode.DARK, toggleUiMode: jest.fn() })
+    render(<NetworkErrorModal isValidatorNetworkError isBeaconNetworkError={false} />)
 
     expect(screen.getByTestId('networkText')).toHaveTextContent(
-      'networkErrorModal.affectedNetworksnetworkErrorModal.validatorClient networkErrorModal.reconfigureOrContactdiscord.',
+      'Siren failed to maintain connection to the designated Validator Client.Please review and update configuration settings. If this issue persists please contact our team in discord.',
     )
-  })
-  it('config button should set recoil state', () => {
-    mockedSetRecoilState.mockReturnValue(mockSetRecoilState)
-
-    render(<NetworkErrorModal />)
-
-    const configBtn = screen.getByTestId('configure')
-
-    fireEvent.click(configBtn)
-
-    expect(mockSetRecoilState).toBeCalled()
   })
 })

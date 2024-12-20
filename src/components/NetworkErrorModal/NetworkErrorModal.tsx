@@ -1,24 +1,19 @@
-import { AppView, OnboardView } from '../../constants/enums'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { appView, beaconNetworkError, onBoardView, validatorNetworkError } from '../../recoil/atoms'
-import Typography from '../Typography/Typography'
-import Button, { ButtonFace } from '../Button/Button'
-import { DiscordUrl } from '../../constants/constants'
+import { FC } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { DiscordUrl } from '../../constants/constants'
 import RodalModal from '../RodalModal/RodalModal'
+import Typography from '../Typography/Typography'
 
-const NetworkErrorModal = () => {
+export interface NetworkErrorModalProps {
+  isBeaconNetworkError: boolean
+  isValidatorNetworkError: boolean
+}
+
+const NetworkErrorModal: FC<NetworkErrorModalProps> = ({
+  isBeaconNetworkError,
+  isValidatorNetworkError,
+}) => {
   const { t } = useTranslation()
-  const isBeaconNetworkError = useRecoilValue(beaconNetworkError)
-  const isValidatorNetworkError = useRecoilValue(validatorNetworkError)
-
-  const setView = useSetRecoilState(onBoardView)
-  const setAppView = useSetRecoilState(appView)
-
-  const viewConfig = () => {
-    setView(OnboardView.CONFIGURE)
-    setAppView(AppView.ONBOARD)
-  }
 
   const effectedNetworkText = () => {
     if (isBeaconNetworkError && isValidatorNetworkError) {
@@ -41,10 +36,11 @@ const NetworkErrorModal = () => {
         </Typography>
         <div className='max-w-xl mb-8'>
           <Typography data-testid='networkText' className='text-center'>
-            <Trans i18nKey='networkErrorModal.affectedNetworks'>
-              <span className='font-bold' />
-              {{ network: effectedNetworkText() }}
-            </Trans>{' '}
+            <Trans
+              i18nKey='networkErrorModal.affectedNetworks'
+              components={{ span: <span className='font-bold' /> }}
+              values={{ network: effectedNetworkText() }}
+            />
             <Trans i18nKey='networkErrorModal.reconfigureOrContact'>
               <a className='font-bold underline' target='_blank' rel='noreferrer' href={DiscordUrl}>
                 discord
@@ -53,10 +49,6 @@ const NetworkErrorModal = () => {
             </Trans>
           </Typography>
         </div>
-        <Button dataTestId='configure' onClick={viewConfig} type={ButtonFace.SECONDARY}>
-          <i className='bi-box-arrow-left mr-2' />
-          {t('configure')}
-        </Button>
       </div>
     </RodalModal>
   )
